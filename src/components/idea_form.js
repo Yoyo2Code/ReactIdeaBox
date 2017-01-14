@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 
 export default class IdeaForm extends Component {
-  constructor(props) {
-      super(props);
-  }
 
   render() {
       return(
@@ -24,6 +21,6 @@ export default class IdeaForm extends Component {
     let children = e.target.children;
     let title = children[0].value;
     let body = children[2].value;
-    console.log(`title: ${title}, body: ${body}`);
+    this.props.addIdea({title: title, body: body});
   }
 }
