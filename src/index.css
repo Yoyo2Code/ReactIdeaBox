@@ -10,7 +10,7 @@ body {
   margin: auto;
   text-align: center;
   margin-top: 10px;
-  width: 100px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -26,3 +26,19 @@ body {
   color: white;
 }
 
+/*Styling for idea-list*/
+
+.idea-list {
+  text-align: center;
+  width: 200px;
+  margin: auto;
+}
+
+/*Styling for idea card*/
+
+.idea-card {
+  margin: 20px 0 20px 0;
+  padding-bottom: 10px;
+  text-align: center;
+  border: 1px solid black;
+}
