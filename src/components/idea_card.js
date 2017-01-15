@@ -16,7 +16,7 @@ export default class IdeaCard extends Component {
         if(this.state.show) {
             return (
               <div className="idea-card" >
-                <form onSubmit={this.props.changeIdea}>
+                <form onSubmit={this._changeStuff.bind(this)} >
                 <h4>{this.props.ideaId}</h4>
                   <h3>Title: </h3>
                     <input 
@@ -34,27 +34,51 @@ export default class IdeaCard extends Component {
 
         return(
             <div className="idea-card" onClick={this._allowEdits.bind(this)} >
-                <h4>{this.props.ideaId}</h4>
+                <h4>{this.state.ideaId}</h4>
                 <h3>Title: </h3>
-                <p>{this.props.title}</p>
+                <p>{this.state.title}</p>
                 <h3>Body: </h3>
-                <p>{this.props.body}</p>
+                <p>{this.state.body}</p>
 
                 <button>Delete</button>
-
             </div>
         );
     }
 
+    _changeStuff(e) {
+      e.preventDefault();
+      this._allowEdits();
+      this.props.changeIdea(e)
+    }
+
     _editingTitle(e){ 
-      this.setState({ ...this.state, title: e.target.value })
+       let newTitle = e.target.value;
+      let newState = {
+          show: this.state.show,
+          title: newTitle,
+          body: this.state.body,
+          id: this.state.ideaId
+      }
+      this.setState(newState);
     }
 
     _editingBody(e){ 
-      this.setState({ ...this.state, body: e.target.value });
+      let newBody = e.target.value;
+      let newState = {
+          show: this.state.show,
+          title: this.state.title,
+          body: newBody,
+          id: this.state.ideaId
+      }
+      this.setState(newState);
     }
 
-    _allowEdits() {
-      this.setState({show: true})
+    _allowEdits(e) {
+      this.setState({ 
+        show: !this.state.show,
+        title: this.state.title,
+        body: this.state.body,
+        id: this.state.id
+      });
     }
 }
