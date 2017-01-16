@@ -16,11 +16,13 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <IdeaForm addIdea={this._addIdea.bind(this)} />
+        <IdeaForm createIdea={this._createIdea.bind(this)} />
         <IdeaList 
           ideas={this.state.ideas}
           changeIdea={this._changeIdea.bind(this)}
-          deleteIdea={this._deleteIdea.bind(this)}/>
+          deleteIdea={this._deleteIdea.bind(this)}
+          updateIdea={this._updateIdea}
+          addIdeaToAppState={this._addIdeaToAppState.bind(this)}/>
       </div>
     );
   }
@@ -51,7 +53,7 @@ class App extends Component {
   }
 
   _updateIdea(selectedIdea){
-    let ideaId = selectedIdea.id;
+    let ideaId = Number(selectedIdea.id);
     axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + ideaId, {
         idea: {
           title: selectedIdea.title,
@@ -71,7 +73,32 @@ class App extends Component {
     this.setState({ideas: newState});
   }
 
+    _createIdea({title, body}) {
+      let self = this;
+      axios.post('https://idea-box-api.herokuapp.com/api/v1/ideas', {
+        idea: {
+          title: title,
+          body: body
+        }
+      })
+      .then(function (response) {
+        self._addIdea(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
 
+    _addIdeaToAppState(newIdea) {
+      let allIdeas = this.state.ideas;
+      let filteredIdeas = allIdeas.filter(idea => {
+        if(idea.id !== newIdea.id) {
+          return idea;
+        }
+      });
+      allIdeas = filteredIdeas.concat(newIdea);
+      this.setState({ideas: allIdeas});
+    }
 }
 
 
