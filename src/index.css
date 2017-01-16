@@ -30,7 +30,8 @@ body {
 
 .idea-list {
   text-align: center;
-  width: 200px;
+  width: 80%;
+  height: 1000px;
   margin: auto;
 }
 
@@ -41,4 +42,23 @@ body {
   padding-bottom: 10px;
   text-align: center;
   border: 1px solid black;
+}
+
+/*Styling for card list*/
+
+.list {
+  /*background-color: red;*/
+  /*border: 1px solid black;*/
+  height: 100%;
+  float:left;
+  width: 25%;
+  margin: 50px;
+  margin-left: 275px;
+  padding: auto;
+}
+
+/*Styling for current*/
+
+.current-list {
+  /*background-color: blue;*/
 }

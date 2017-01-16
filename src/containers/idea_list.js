@@ -1,33 +1,80 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
-import IdeaCard from '../components/idea_card';
+import Current from './current_list';
+import Backlog from './backlog_list';
 
 export default class IdeaList extends Component {
-    constructor(props) {
-      super(props);
+  constructor(props) {
+    super(props);
 
-      this.state = { ideas: this.props.ideas };
-    }
-
+    this.state = { ideas: [] };
+  }
     render() {
         return(
-          <div className="idea-list" >
-            {this._createIdeas()}
+          <div>
+            {this._sortIdeas()}
           </div>
         );
     }
 
-    _createIdeas() {
-        return this.props.ideas.map((idea) => {
-          return (
-            <IdeaCard 
-              title={idea.title}
-              body={idea.body}
-              key={idea.id}
-              ideaId={idea.id}
-              changeIdea={this.props.changeIdea}
-              deleteIdea={this.props.deleteIdea}/>
-          );
+    _distributeIdeas([backlogIdeas, currentIdeas]) {
+      return(
+        <div className="idea-list" >
+          <Backlog 
+            ideas={backlogIdeas}
+            changeStatus={this._updateStatusChange.bind(this)}
+            deleteIdea={this.props.deleteIdea} 
+            updateIdea={this.props.updateIdea}/>
+          <Current 
+            ideas={currentIdeas} 
+            changeStatus={this._updateStatusChange.bind(this)} 
+            deleteIdea={this.props.deleteIdea}
+            updateIdea={this.props.updateIdea}/>
+        </div>
+      );
+    }
+
+    _sortIdeas() {
+      let sortedIdeas = this.props.ideas.reduce((obj, idea) => {
+        if(idea.status === "backlog") {
+          obj[0].push(idea);
+          return obj;
+        } 
+        
+        if(idea.status === "current") {
+          obj[1].push(idea);
+          return obj;
+        }
+        
+        return obj;
+      }, [[],[]]);
+      return this._distributeIdeas(sortedIdeas);
+    }
+
+    _updateStatusChange(e) {
+      let self = this;
+      e.preventDefault();
+      let targetIdea = e.target.parentElement;
+      let id = targetIdea.children[0].innerText;
+      let status = this._changeStatus(targetIdea.parentElement.classList[1]);
+
+      axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
+        idea: {
+          status: status
+        }
+      }).then(function(response) {
+          self.props.addIdeaToAppState(response.data);
         });
+    }
+
+    _changeStatus(status) {
+      if(status === "backlog") {
+        return "current";
+      }
+
+      if(status === "current") {
+        return "backlog";
+      }
     }
 }

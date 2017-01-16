@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 export default class IdeaForm extends Component {
 
@@ -22,23 +21,12 @@ export default class IdeaForm extends Component {
     let children = e.target.children;
     let title = children[0].value;
     let body = children[2].value;
-    let idea = this._createIdea({title, body});
+    this._clearFields(children)
+    let idea = this.props.createIdea({title, body});
   }
 
-  _createIdea({title, body}) {
-    let self = this;
-    axios.post('https://idea-box-api.herokuapp.com/api/v1/ideas', {
-      idea: {
-        title: title,
-        body: body
-      }
-  })
-  .then(function (response) {
-    let { id, title, body } = response.data;
-    self.props.addIdea({id, title, body});
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+  _clearFields(fields) {
+    fields[0].value = "";
+    fields[2].value = "";
   }
 }
