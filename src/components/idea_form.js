@@ -22,11 +22,11 @@ export default class IdeaForm extends Component {
     let children = e.target.children;
     let title = children[0].value;
     let body = children[2].value;
-    this._createIdea({title, body});
-    this.props.addIdea({title, body});
+    let idea = this._createIdea({title, body});
   }
 
   _createIdea({title, body}) {
+    let self = this;
     axios.post('https://idea-box-api.herokuapp.com/api/v1/ideas', {
       idea: {
         title: title,
@@ -34,7 +34,8 @@ export default class IdeaForm extends Component {
       }
   })
   .then(function (response) {
-    console.log(response);
+    let { id, title, body } = response.data;
+    self.props.addIdea({id, title, body});
   })
   .catch(function (error) {
     console.log(error);

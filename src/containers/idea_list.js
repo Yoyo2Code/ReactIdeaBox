@@ -20,7 +20,13 @@ export default class IdeaList extends Component {
     _createIdeas() {
         return this.props.ideas.map((idea) => {
           return (
-            <IdeaCard title={idea.title} body={idea.body} key={idea.id} ideaId={idea.id} changeIdea={this.props.changeIdea}/>
+            <IdeaCard 
+              title={idea.title}
+              body={idea.body}
+              key={idea.id}
+              ideaId={idea.id}
+              changeIdea={this.props.changeIdea}
+              deleteIdea={this.props.deleteIdea}/>
           );
         });
     }

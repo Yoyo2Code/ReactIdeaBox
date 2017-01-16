@@ -17,7 +17,10 @@ class App extends Component {
     return (
       <div className="App">
         <IdeaForm addIdea={this._addIdea.bind(this)} />
-        <IdeaList ideas={this.state.ideas} changeIdea={this._changeIdea.bind(this)}/>
+        <IdeaList 
+          ideas={this.state.ideas}
+          changeIdea={this._changeIdea.bind(this)}
+          deleteIdea={this._deleteIdea.bind(this)}/>
       </div>
     );
   }
@@ -40,7 +43,7 @@ class App extends Component {
 
   _changeIdea(e) {
     e.preventDefault();
-    let children = e.target.children;
+    let children = e.target.parentElement.children;
     let id = children[0].innerHTML;
     let title = children[2].value;
     let body = children[4].value;
@@ -58,6 +61,17 @@ class App extends Component {
       console.log(response);
     })
   }
+
+  _deleteIdea(e) {
+    let id = e.target.parentElement.children[0].innerText;
+    let newState = this.state.ideas.filter(idea => {
+      return idea.id !== Number(id);
+    });
+    axios.delete("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id);
+    this.setState({ideas: newState});
+  }
+
+
 }
 
 
