@@ -16,8 +16,8 @@ export default class IdeaCard extends Component {
         if(this.state.show) {
             return (
               <div className="idea-card" >
-                <form onSubmit={this._changeStuff.bind(this)} >
-                <h4>{this.props.ideaId}</h4>
+                <form onBlur={this._changeStuff.bind(this)} >
+                <h4>{this.state.id}</h4>
                   <h3>Title: </h3>
                     <input 
                       value={this.state.title}
@@ -26,7 +26,7 @@ export default class IdeaCard extends Component {
                     <input
                       value={this.state.body}
                       onChange={this._editingBody.bind(this)}/>
-                 <button>Delete</button>
+                 <button onClick={this.props.deleteIdea}>Delete</button>
                </form>
              </div>
            );
@@ -34,13 +34,13 @@ export default class IdeaCard extends Component {
 
         return(
             <div className="idea-card" onClick={this._allowEdits.bind(this)} >
-                <h4>{this.state.ideaId}</h4>
+                <h4>{this.state.id}</h4>
                 <h3>Title: </h3>
                 <p>{this.state.title}</p>
                 <h3>Body: </h3>
                 <p>{this.state.body}</p>
 
-                <button>Delete</button>
+                <button onClick={this.props.deleteIdea} >Delete</button>
             </div>
         );
     }
