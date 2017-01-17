@@ -4,11 +4,6 @@ import axios from 'axios';
 import IdeaCard from '../components/idea_card';
 
 class Current extends Component {
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = { orderedIdeas: [] };
-  // }
     render() {
       return(
         <div className="list" id="current" >
@@ -93,31 +88,29 @@ class Current extends Component {
 
       let i = 0;
       while(i < ideasAfterTarget.length) {
-        // debugger;
+        let update = true;
         let selectIdea = ideasAfterTarget[i]
         let id = selectIdea.id;
 
         if(id === Number(draggedCardId)) {
-          i+=1;
-          return;
+          update = false
         }
         
-
-        axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
-          idea: {
-            position: targetPosition
-          }
-        }).then(function(response) {
-          newIdeas.push(response.data);
-          console.log("I updated this: ", response.data);
-        })
+        if(update === true) {
+          axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
+            idea: {
+              position: targetPosition
+            }
+          }).then(function(response) {
+            newIdeas.push(response.data);
+            console.log("I updated this: ", response.data);
+          });
+        }
 
         targetPosition+=1;
         i+= 1;
       }
-      // i = 0;
-      // this.setState({orderedIdeas: newIdeas})
-      return newIdeas;
+      this.props.fetchAllIdeas();
     }
   }
 

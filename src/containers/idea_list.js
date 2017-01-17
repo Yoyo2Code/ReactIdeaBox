@@ -22,11 +22,13 @@ export default class IdeaList extends Component {
       return(
         <div className="idea-list" >
           <Backlog 
+            fetchAllIdeas={this.props.fetchAllIdeas}
             ideas={backlogIdeas}
             changeStatus={this._updateStatusChange.bind(this)}
             deleteIdea={this.props.deleteIdea} 
             updateIdea={this.props.updateIdea} />
           <Current 
+            fetchAllIdeas={this.props.fetchAllIdeas}
             ideas={currentIdeas} 
             changeStatus={this._updateStatusChange.bind(this)} 
             deleteIdea={this.props.deleteIdea}

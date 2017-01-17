@@ -18,6 +18,7 @@ class App extends Component {
       <div className="App">
         <IdeaForm createIdea={this._createIdea.bind(this)} />
         <IdeaList 
+          fetchAllIdeas={this._fetchAllIdeas.bind(this)}
           ideas={this.state.ideas}
           changeIdea={this._changeIdea.bind(this)}
           deleteIdea={this._deleteIdea.bind(this)}
@@ -28,6 +29,18 @@ class App extends Component {
   }
 
   componentWillMount() {
+    let self = this;
+    axios.get('https://idea-box-api.herokuapp.com/api/v1/ideas')
+    .then(function(response) {
+      console.log(response);
+      self.setState({ ideas: [ ...response.data ] });
+    })
+    .catch(function(response) {
+      console.log(response);
+    })
+  }
+
+  _fetchAllIdeas() {
     let self = this;
     axios.get('https://idea-box-api.herokuapp.com/api/v1/ideas')
     .then(function(response) {

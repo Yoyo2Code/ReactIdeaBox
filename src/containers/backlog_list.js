@@ -20,6 +20,9 @@ class Backlog extends Component {
     }
 
     _createIdeas() {
+      if(this.state.orderedIdeas[0] !== undefined) {
+        debugger;
+      }
       let ideaCount = 0;
       let ideaCards = this.props.ideas.map((idea) => {
         let card = (
@@ -94,17 +97,17 @@ class Backlog extends Component {
         targetPosition+=1;
 
       let i = 0;
+
       while(i < ideasAfterTarget.length) {
-        // debugger;
+        let update = true;
         let selectIdea = ideasAfterTarget[i]
         let id = selectIdea.id;
 
         if(id === Number(draggedCardId)) {
-          i+=1;
-          return;
+          update = false
         }
         
-
+        if(update === true) {
         axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
           idea: {
             position: targetPosition
@@ -113,12 +116,12 @@ class Backlog extends Component {
           newIdeas.push(response.data);
           console.log("I updated this: ", response.data);
         })
+        }
 
         targetPosition+= 1;
         i+= 1;
       }
-      // i = 0;
-      return newIdeas;
+      this.props.fetchAllIdeas();
     }
 }
 

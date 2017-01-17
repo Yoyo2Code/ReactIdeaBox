@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import arrow from '../../public/updownarrow.png';
 
 class IdeaCard extends Component {
     constructor(props) {
@@ -31,9 +32,20 @@ class IdeaCard extends Component {
                 <br/>
 
                 <button onClick={this.props.deleteIdea} >Delete</button><br />
-                <button onClick={this.props.changeStatus}>{`Move to ${this.props.status}`}</button>
+                <button onClick={this.props.changeStatus}>{this._determineBtnText(this.props.status)}</button>
+                <img src={arrow} alt="arrow" height="50px" width="50px" draggable="false"/> 
             </div>
         );
+    }
+
+    _determineBtnText(text) {
+      if(text === "backlog") {
+        return "Mark as Current"
+      }
+
+      if(text === "current") {
+        return "Mark as Backlog"
+      }
     }
 
     allowDrop(ev) {
