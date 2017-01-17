@@ -42,19 +42,23 @@ body {
   padding-bottom: 10px;
   text-align: center;
   border: 1px solid black;
+  height: 500px;
 }
 
 /*Styling for card list*/
 
 .list {
-  /*background-color: red;*/
+  background-color: red;
   /*border: 1px solid black;*/
   height: 100%;
   float:left;
-  width: 25%;
+  width: 30%;
   margin: 50px;
-  margin-left: 275px;
+  margin-left: 200px;
   padding: auto;
+  line-height:3em;
+  overflow: auto;
+  padding: 15px;
 }
 
 /*Styling for current*/

@@ -25,12 +25,12 @@ export default class IdeaList extends Component {
             ideas={backlogIdeas}
             changeStatus={this._updateStatusChange.bind(this)}
             deleteIdea={this.props.deleteIdea} 
-            updateIdea={this.props.updateIdea}/>
+            updateIdea={this.props.updateIdea} />
           <Current 
             ideas={currentIdeas} 
             changeStatus={this._updateStatusChange.bind(this)} 
             deleteIdea={this.props.deleteIdea}
-            updateIdea={this.props.updateIdea}/>
+            updateIdea={this.props.updateIdea} />
         </div>
       );
     }
@@ -49,7 +49,17 @@ export default class IdeaList extends Component {
         
         return obj;
       }, [[],[]]);
-      return this._distributeIdeas(sortedIdeas);
+
+
+      let backlogsSorted = sortedIdeas[0].sort(function(a, b) {
+        return a.position - b.position
+      });
+
+      let currentSorted = sortedIdeas[1].sort(function(a, b) {
+        return a.position - b.position
+      });
+
+      return this._distributeIdeas([backlogsSorted, currentSorted]);
     }
 
     _updateStatusChange(e) {

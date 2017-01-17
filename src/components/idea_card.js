@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class IdeaCard extends Component {
+class IdeaCard extends Component {
     constructor(props) {
         super(props);
 
@@ -17,7 +17,12 @@ export default class IdeaCard extends Component {
 
     render() {
         return(
-            <div className="idea-card" >
+            <div className="idea-card" 
+              id={this.props.positionNum} 
+              draggable="true" 
+              onDragStart={this.drag.bind(this)}
+              onDrop={this.drop.bind(this)}
+              onDragOver={this.allowDrop.bind(this)} >
                 <h4>{this.state.id}</h4>
                 <h3>Title: </h3>
                 { this._editingTitle() }
@@ -29,6 +34,29 @@ export default class IdeaCard extends Component {
                 <button onClick={this.props.changeStatus}>{`Move to ${this.props.status}`}</button>
             </div>
         );
+    }
+
+    allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    drop(ev) {
+      ev.preventDefault();
+      var data = ev.dataTransfer.getData("text");
+      let draggedCard = document.getElementById(data);
+      let columnNameForDragged = document.getElementById(data).parentElement.id
+      let columnNameForTarget  = ev.target.parentElement.id;
+
+      if(columnNameForDragged === columnNameForTarget) {
+        this.props.moveIdea({
+          draggedCard: draggedCard,
+          targetCard: ev.target
+        });
+      }
     }
 
     _editTitle() {
@@ -109,3 +137,5 @@ export default class IdeaCard extends Component {
       this.setState({ show: !this.state.show });
     }
 }
+
+export default IdeaCard;
