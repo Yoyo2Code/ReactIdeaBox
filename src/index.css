@@ -48,17 +48,11 @@ body {
 /*Styling for card list*/
 
 .list {
-  /*background-color: red;*/
-  /*border: 1px solid black;*/
   height: 100%;
   float:left;
   width: 30%;
   margin: 50px;
   margin-left: 200px;
-  /*padding: auto;*/
-  /*line-height:3em;*/
-  /*overflow: auto;*/
-  /*padding: 15px;*/
 }
 
 /*Styling for current*/

@@ -69,7 +69,7 @@ export default class IdeaList extends Component {
       e.preventDefault();
       let targetIdea = e.target.parentElement;
       let id = targetIdea.children[0].innerText;
-      let status = this._changeStatus(targetIdea.parentElement.classList[1]);
+      let status = this._changeStatus(targetIdea.parentElement.id);
 
       axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
         idea: {

@@ -4,8 +4,6 @@ import axios from 'axios';
 import IdeaForm from './components/idea_form';
 import IdeaList from './containers/idea_list';
 
-import './App.css';
-
 class App extends Component {
   constructor(props) {
     super(props);
