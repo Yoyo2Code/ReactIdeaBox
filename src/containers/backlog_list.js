@@ -20,9 +20,6 @@ class Backlog extends Component {
     }
 
     _createIdeas() {
-      if(this.state.orderedIdeas[0] !== undefined) {
-        debugger;
-      }
       let ideaCount = 0;
       let ideaCards = this.props.ideas.map((idea) => {
         let card = (
@@ -58,7 +55,6 @@ class Backlog extends Component {
 
       let columnIdeaCount = this.props.ideas.length;
 
-
       this._changeIdeas({
         dragIdeaPosition,
         dragIdeaId,
@@ -68,10 +64,63 @@ class Backlog extends Component {
       });
     }
 
+    _updateCardsAbove(data) {
+      let ideas = this.props.ideas.sort((a, b) => a - b);
+      let stopNumber = data.columnIdeaCount;
+      let dragIdeaPositon = Number(data.dragIdeaPosition);
+      let draggedCardId = Number(data.dragIdeaId);
+      let targetIdeaId = data.targetIdeaId;
+      let targetIdeaPosition = Number(data.targetIdeaPosition);
+
+      let targetIdeaIndex = ideas.findIndex(idea => { 
+        return Number(idea.id) === Number(targetIdeaId); 
+      });
+      
+      let aboveCards = ideas.slice(0, targetIdeaIndex + 1);
+
+      let targetPosition = 0;
+
+      axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + draggedCardId, {
+        idea: {
+          position: targetIdeaIndex
+        }
+      }).then(function(response) {
+        });
+
+      let i = 0;
+
+      while(i < aboveCards.length) {
+        let update = true;
+        let selectIdea = aboveCards[i]
+        let id = selectIdea.id;
+        if(id === draggedCardId) {
+          update = false
+        }
+        
+        let self = this;
+        if(update === true) {
+        axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
+          idea: {
+            position: targetPosition
+          }
+        }).then(function(response) {
+            self.props.fetchAllIdeas();
+          });
+        }
+        
+        if(update === true) {
+          targetPosition+= 1;
+        }
+
+        i+= 1;
+      }
+
+    }
+
     _changeIdeas(data) {
       let ideas = this.props.ideas.sort((a, b) => a - b);
       let stopNumber = data.columnIdeaCount;
-      let newPosition = data.targetIdeaPosition;
+      let dragIdeaPositon = Number(data.dragIdeaPosition);
       let draggedCardId = data.dragIdeaId;
       let targetIdeaId = data.targetIdeaId;
       let targetIdeaPosition = Number(data.targetIdeaPosition);
@@ -80,18 +129,19 @@ class Backlog extends Component {
         return Number(idea.id) === Number(targetIdeaId); 
       });
 
-      let ideasAfterTarget = ideas.slice(targetIdeaIndex + 1, stopNumber);
+      if(dragIdeaPositon < targetIdeaPosition) {
+        this._updateCardsAbove(data);
+        return;
+      }
 
-      let targetPosition = targetIdeaPosition + 1; // HERE
-      let newIdeas = [];
+      let ideasAfterTarget = ideas.slice(targetIdeaIndex, stopNumber);
+      let targetPosition   = targetIdeaPosition;
 
       axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + draggedCardId, {
         idea: {
           position: targetPosition
         }
       }).then(function(response) {
-          newIdeas.push(response.data);
-          console.log("I got this first: ", response.data)
         });
 
         targetPosition+=1;
@@ -107,21 +157,20 @@ class Backlog extends Component {
           update = false
         }
         
+        let self = this;
         if(update === true) {
         axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
           idea: {
             position: targetPosition
           }
         }).then(function(response) {
-          newIdeas.push(response.data);
-          console.log("I updated this: ", response.data);
-        })
+            self.props.fetchAllIdeas();
+          });
         }
 
         targetPosition+= 1;
         i+= 1;
       }
-      this.props.fetchAllIdeas();
     }
 }
 

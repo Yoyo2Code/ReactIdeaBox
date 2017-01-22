@@ -37,7 +37,6 @@ class Current extends Component {
     }
 
     _moveIdea({draggedCard, targetCard}) {
-
       let dragged = draggedCard.id.split("-");
       let target = targetCard.id.split("-");
 
@@ -58,10 +57,63 @@ class Current extends Component {
       });
     }
 
-      _changeIdeas(data) {
+     _updateCardsAbove(data) {
       let ideas = this.props.ideas.sort((a, b) => a - b);
       let stopNumber = data.columnIdeaCount;
-      let newPosition = data.targetIdeaPosition;
+      let dragIdeaPositon = Number(data.dragIdeaPosition);
+      let draggedCardId = Number(data.dragIdeaId);
+      let targetIdeaId = data.targetIdeaId;
+      let targetIdeaPosition = Number(data.targetIdeaPosition);
+
+      let targetIdeaIndex = ideas.findIndex(idea => { 
+        return Number(idea.id) === Number(targetIdeaId); 
+      });
+      
+      let aboveCards = ideas.slice(0, targetIdeaIndex + 1);
+
+      let targetPosition = 0;
+
+      axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + draggedCardId, {
+        idea: {
+          position: targetIdeaIndex
+        }
+      }).then(function(response) {
+        });
+
+      let i = 0;
+
+      while(i < aboveCards.length) {
+        let update = true;
+        let selectIdea = aboveCards[i]
+        let id = selectIdea.id;
+        if(id === draggedCardId) {
+          update = false
+        }
+        
+        let self = this;
+        if(update === true) {
+        axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
+          idea: {
+            position: targetPosition
+          }
+        }).then(function(response) {
+            self.props.fetchAllIdeas();
+          });
+        }
+        
+        if(update === true) {
+          targetPosition+= 1;
+        }
+
+        i+= 1;
+      }
+
+    }
+
+    _changeIdeas(data) {
+      let ideas = this.props.ideas.sort((a, b) => a - b);
+      let stopNumber = data.columnIdeaCount;
+      let dragIdeaPositon = Number(data.dragIdeaPosition);
       let draggedCardId = data.dragIdeaId;
       let targetIdeaId = data.targetIdeaId;
       let targetIdeaPosition = Number(data.targetIdeaPosition);
@@ -70,23 +122,26 @@ class Current extends Component {
         return Number(idea.id) === Number(targetIdeaId); 
       });
 
-      let ideasAfterTarget = ideas.slice(targetIdeaIndex + 1, stopNumber);
+      if(dragIdeaPositon < targetIdeaPosition) {
+        this._updateCardsAbove(data);
+        return;
+      }
 
-      let targetPosition = targetIdeaPosition + 1; // HERE
-      let newIdeas = [];
+      let ideasAfterTarget = ideas.slice(targetIdeaIndex, stopNumber);
+      let targetPosition   = targetIdeaPosition;
 
       axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + draggedCardId, {
         idea: {
-          position: targetIdeaPosition
+          position: targetPosition
         }
       }).then(function(response) {
-          newIdeas.push(response.data);
-          console.log("I got this first: ", response.data)
+          ("I got this first: ", response.data)
         });
 
         targetPosition+=1;
 
       let i = 0;
+
       while(i < ideasAfterTarget.length) {
         let update = true;
         let selectIdea = ideasAfterTarget[i]
@@ -96,22 +151,21 @@ class Current extends Component {
           update = false
         }
         
+        let self = this;
         if(update === true) {
-          axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
-            idea: {
-              position: targetPosition
-            }
-          }).then(function(response) {
-            newIdeas.push(response.data);
-            console.log("I updated this: ", response.data);
+        axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
+          idea: {
+            position: targetPosition
+          }
+        }).then(function(response) {
+            self.props.fetchAllIdeas();
           });
         }
 
-        targetPosition+=1;
+        targetPosition+= 1;
         i+= 1;
       }
-      this.props.fetchAllIdeas();
     }
-  }
+}
 
 export default Current;

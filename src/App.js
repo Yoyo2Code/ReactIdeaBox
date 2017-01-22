@@ -40,12 +40,11 @@ class App extends Component {
 
   _fetchAllIdeas() {
     let self = this;
-    axios.get('https://idea-box-api.herokuapp.com/api/v1/ideas')
-    .then(function(response) {
-      console.log(response);
+    axios.get(
+      'https://idea-box-api.herokuapp.com/api/v1/ideas'
+      ).then(function(response) {
       self.setState({ ideas: [ ...response.data ] });
-    })
-    .catch(function(response) {
+    }).catch(function(response) {
       console.log(response);
     })
   }
