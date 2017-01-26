@@ -22,15 +22,17 @@ export default class IdeaList extends Component {
       return(
         <div className="idea-list" >
           <Backlog 
+            fetchAllIdeas={this.props.fetchAllIdeas}
             ideas={backlogIdeas}
             changeStatus={this._updateStatusChange.bind(this)}
             deleteIdea={this.props.deleteIdea} 
-            updateIdea={this.props.updateIdea}/>
+            updateIdea={this.props.updateIdea} />
           <Current 
+            fetchAllIdeas={this.props.fetchAllIdeas}
             ideas={currentIdeas} 
             changeStatus={this._updateStatusChange.bind(this)} 
             deleteIdea={this.props.deleteIdea}
-            updateIdea={this.props.updateIdea}/>
+            updateIdea={this.props.updateIdea} />
         </div>
       );
     }
@@ -49,7 +51,17 @@ export default class IdeaList extends Component {
         
         return obj;
       }, [[],[]]);
-      return this._distributeIdeas(sortedIdeas);
+
+
+      let backlogsSorted = sortedIdeas[0].sort(function(a, b) {
+        return a.position - b.position
+      });
+
+      let currentSorted = sortedIdeas[1].sort(function(a, b) {
+        return a.position - b.position
+      });
+
+      return this._distributeIdeas([backlogsSorted, currentSorted]);
     }
 
     _updateStatusChange(e) {
@@ -57,9 +69,9 @@ export default class IdeaList extends Component {
       e.preventDefault();
       let targetIdea = e.target.parentElement;
       let id = targetIdea.children[0].innerText;
-      let status = this._changeStatus(targetIdea.parentElement.classList[1]);
+      let status = this._changeStatus(targetIdea.parentElement.id);
 
-      axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
+      axios.put("http://localhost:8080/api/v1/ideas/" + id, {
         idea: {
           status: status
         }

@@ -4,8 +4,6 @@ import axios from 'axios';
 import IdeaForm from './components/idea_form';
 import IdeaList from './containers/idea_list';
 
-import './App.css';
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +16,7 @@ class App extends Component {
       <div className="App">
         <IdeaForm createIdea={this._createIdea.bind(this)} />
         <IdeaList 
+          fetchAllIdeas={this._fetchAllIdeas.bind(this)}
           ideas={this.state.ideas}
           changeIdea={this._changeIdea.bind(this)}
           deleteIdea={this._deleteIdea.bind(this)}
@@ -29,12 +28,23 @@ class App extends Component {
 
   componentWillMount() {
     let self = this;
-    axios.get('https://idea-box-api.herokuapp.com/api/v1/ideas')
+    axios.get('http://localhost:8080/api/v1/ideas')
     .then(function(response) {
       console.log(response);
       self.setState({ ideas: [ ...response.data ] });
     })
     .catch(function(response) {
+      console.log(response);
+    })
+  }
+
+  _fetchAllIdeas() {
+    let self = this;
+    axios.get(
+      'http://localhost:8080/api/v1/ideas'
+      ).then(function(response) {
+      self.setState({ ideas: [ ...response.data ] });
+    }).catch(function(response) {
       console.log(response);
     })
   }
@@ -54,7 +64,7 @@ class App extends Component {
 
   _updateIdea(selectedIdea){
     let ideaId = Number(selectedIdea.id);
-    axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + ideaId, {
+    axios.put("http://localhost:8080/api/v1/ideas/" + ideaId, {
         idea: {
           title: selectedIdea.title,
           body: selectedIdea.body
@@ -69,13 +79,13 @@ class App extends Component {
     let newState = this.state.ideas.filter(idea => {
       return idea.id !== Number(id);
     });
-    axios.delete("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id);
+    axios.delete("http://localhost:8080/api/v1/ideas/" + id);
     this.setState({ideas: newState});
   }
 
     _createIdea({title, body}) {
       let self = this;
-      axios.post('https://idea-box-api.herokuapp.com/api/v1/ideas', {
+      axios.post('http://localhost:8080/api/v1/ideas', {
         idea: {
           title: title,
           body: body
