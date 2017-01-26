@@ -80,7 +80,7 @@ class Backlog extends Component {
 
       let targetPosition = 0;
 
-      axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + draggedCardId, {
+      axios.put("http://localhost:8080/api/v1/ideas/" + draggedCardId, {
         idea: {
           position: targetIdeaIndex
         }
@@ -99,7 +99,7 @@ class Backlog extends Component {
         
         let self = this;
         if(update === true) {
-        axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
+        axios.put("http://localhost:8080/api/v1/ideas/" + id, {
           idea: {
             position: targetPosition
           }
@@ -137,7 +137,7 @@ class Backlog extends Component {
       let ideasAfterTarget = ideas.slice(targetIdeaIndex, stopNumber);
       let targetPosition   = targetIdeaPosition;
 
-      axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + draggedCardId, {
+      axios.put("http://localhost:8080/api/v1/ideas/" + draggedCardId, {
         idea: {
           position: targetPosition
         }
@@ -159,7 +159,7 @@ class Backlog extends Component {
         
         let self = this;
         if(update === true) {
-        axios.put("https://idea-box-api.herokuapp.com/api/v1/ideas/" + id, {
+        axios.put("http://localhost:8080/api/v1/ideas/" + id, {
           idea: {
             position: targetPosition
           }
