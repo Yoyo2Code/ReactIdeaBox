@@ -28,7 +28,7 @@ class App extends Component {
 
   componentWillMount() {
     let self = this;
-    axios.get('http://localhost:8080/api/v1/ideas')
+    axios.get('https://idea-box-api.herokuapp.com//api/v1/ideas')
     .then(function(response) {
       console.log(response);
       self.setState({ ideas: [ ...response.data ] });
@@ -41,7 +41,7 @@ class App extends Component {
   _fetchAllIdeas() {
     let self = this;
     axios.get(
-      'http://localhost:8080/api/v1/ideas'
+      'https://idea-box-api.herokuapp.com//api/v1/ideas'
       ).then(function(response) {
       self.setState({ ideas: [ ...response.data ] });
     }).catch(function(response) {
@@ -64,7 +64,7 @@ class App extends Component {
 
   _updateIdea(selectedIdea){
     let ideaId = Number(selectedIdea.id);
-    axios.put("http://localhost:8080/api/v1/ideas/" + ideaId, {
+    axios.put("https://idea-box-api.herokuapp.com//api/v1/ideas/" + ideaId, {
         idea: {
           title: selectedIdea.title,
           body: selectedIdea.body
@@ -79,13 +79,13 @@ class App extends Component {
     let newState = this.state.ideas.filter(idea => {
       return idea.id !== Number(id);
     });
-    axios.delete("http://localhost:8080/api/v1/ideas/" + id);
+    axios.delete("https://idea-box-api.herokuapp.com//api/v1/ideas/" + id);
     this.setState({ideas: newState});
   }
 
     _createIdea({title, body}) {
       let self = this;
-      axios.post('http://localhost:8080/api/v1/ideas', {
+      axios.post('https://idea-box-api.herokuapp.com//api/v1/ideas', {
         idea: {
           title: title,
           body: body

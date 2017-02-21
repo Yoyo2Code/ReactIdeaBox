@@ -7,8 +7,3 @@ ReactDOM.render(
   <App />,
   document.getElementById('root')
 );
-
-
-document.addEventListener('right-click', function() {
-  e.preventDefault();
-})
